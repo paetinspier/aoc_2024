@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/paetinspier/aoc_2024/day9"
+	"github.com/paetinspier/aoc_2024/day11"
+	//"github.com/paetinspier/aoc_2024/day10"
+	//"github.com/paetinspier/aoc_2024/day9"
 	//"github.com/paetinspier/aoc_2024/day8"
 	//"github.com/paetinspier/aoc_2024/day7"
 	//"github.com/paetinspier/aoc_2024/day6"
@@ -24,5 +26,7 @@ func main() {
 	//day6.Run()
 	//day7.Run()
 	//day8.Run()
-	day9.Run()
+	//day9.Run()
+	//day10.Run()
+	day11.Run()
 }
