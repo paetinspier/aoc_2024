@@ -3,6 +3,7 @@ package day11
 import (
 	"fmt"
 	"math"
+	"math/big"
 	"os"
 	"strconv"
 	"strings"
@@ -29,49 +30,53 @@ func Run() {
 	}
 	//fmt.Println(nums)
 
-	blinks := 75
-	total := 0
+	blinks := 1000
+	var total big.Int
 
 	s := time.Now()
 	for _, num := range nums {
-		total += totalChildrenAfterN(blinks, num)
+		t := total
+		tc := totalChildrenAfterN(blinks, num)
+		total.Add(&t, &tc)
 	}
 	e := time.Now()
 	elapsed := e.Sub(s)
-
-	fmt.Println(total, "n=", blinks, ", t=", elapsed)
+	fmt.Println(total.String(), "n=", blinks, ", t=", elapsed)
 }
 
 var cache sync.Map
 
-func totalChildrenAfterN(n int, num int) int {
+func totalChildrenAfterN(n int, num int) big.Int {
 
 	cacheKey := fmt.Sprintf("%d,%d", n, num)
 
 	if cacheValue, ok := cache.Load(cacheKey); ok {
-		return cacheValue.(int)
+		return cacheValue.(big.Int)
 	}
 
-	var result int
+	var result big.Int
 
 	if n == 0 {
-		result = 1
+		result.SetInt64(1)
 	} else if num == 0 {
-		result = totalChildrenAfterN(n-1, 1)
+		t := totalChildrenAfterN(n-1, 1)
+		result.Set(&t)
 	} else {
 		digitLen := getDigitLength(num)
 		if digitLen%2 == 0 {
 			num1, num2 := cutNumber(num)
-			result = totalChildrenAfterN(n-1, num1) + totalChildrenAfterN(n-1, num2)
+			t := totalChildrenAfterN(n-1, num1)
+			t2 := totalChildrenAfterN(n-1, num2)
+			result.Add(&t, &t2)
 		} else {
-			result = totalChildrenAfterN(n-1, num*2024)
+			t := totalChildrenAfterN(n-1, num*2024)
+			result.Set(&t)
 		}
 	}
 
 	cache.Store(cacheKey, result)
 	return result
 }
-
 
 func cutNumber(num int) (int, int) {
 	digits := getDigitLength(num)
